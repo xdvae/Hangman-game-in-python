@@ -1,3 +1,6 @@
+#this is a test file testing the game logic to change the keywords
+#work in progress
+
 import random
 import os
 mystr = ("_   "*5)
