@@ -2440,6 +2440,9 @@ Words = [
 
 
 #This function is called when the code executes it gives you da option to start the game n stuff
+#in main file REMOVE ALL THE USELESS CODE
+#I DONT EVEN KNOW WHY I KEEPT IT HERE IN THE FIRST PLACE
+
 def greet():
     input_check = True #Using this to check for correct input set it to True before using
     
@@ -2516,7 +2519,8 @@ def start():
                 tries -= 1
                 next_hint_in -=1
                 chance_random_letter = random.randrange(1,2)
-                
+                # This thing gives a random letter randomly so its a coin flip everytime u get the wrong answer
+                # it fills an empty sell (50% chance to do so) 
                 if(chance_random_letter == 3):
                     random_letter_index = random.randrange(0,chosen_word_len)
                     random_letter = chosen_word[random_letter_index]
@@ -2571,8 +2575,7 @@ def start():
                 tries -= 1
                 next_hint_in -=1
                 chance_random_letter = random.randrange(1,2)
-                
-                if(chance_random_letter == 3):
+                if(chance_random_letter == 2):
                     random_letter_index = random.randrange(0,chosen_word_len)
                     random_letter = chosen_word[random_letter_index]
                     empty_str[random_letter_index] = random_letter
@@ -2614,7 +2617,7 @@ def start():
             fmt_empty_str = ' '.join(empty_str)
             print("Hint 1: "+str(Words[random_index].get("hint_1")))
             print("Hint 2: "+str(Words[random_index].get("hint_2")))
-            print("Hint 3: "+str(Words[random_index].get("hint_3")))
+            print("Hint 3: "+str(Words[random_index].get("hint_3")))   
             player_input = input("> ")
             player_input = player_input.lower()
             player_input = player_input.capitalize()
@@ -2646,12 +2649,6 @@ def start():
             win_or_loose = False
             gameover(win_or_loose, chosen_word)
                      
-           
-                 
-    
-    
-
-    
 
     hint_1()
     # print("GUESS THE WORD")
@@ -2662,8 +2659,8 @@ def start():
    
     
 
-def gameover(win_or_loose,chosen_word):
-    if win_or_loose == True:
+def gameover(win_or_loose,chosen_word): # This takes a boolean true or false to decide whats its gonna show to the player.
+    if win_or_loose == True: # True if they won.
         os.system("cls")
         print("Congrats! You got it right!")
         print("The word was: ",chosen_word+".")
@@ -2683,7 +2680,7 @@ def gameover(win_or_loose,chosen_word):
         elif (choice == 2):
             print("Exiting...")
             
-    elif win_or_loose == False:
+    elif win_or_loose == False: # False if they lost
         print("Sorry! you lost.")
         print("The word was:",chosen_word+".")
         print("What would you like to do now\n1. To play again.\n2. To exit.\n")
@@ -2696,16 +2693,15 @@ def gameover(win_or_loose,chosen_word):
                 print("Please enter the 1 or 2")
                 
         choice = 2
+        # This choice thing does not work!
+        # will fix later.
         if (choice == 1):
             start()
             
         elif (choice == 2):
             print("Exiting...")
         
-        
-        
-
-        
+    
 
 os.system("cls")
-greet()
+greet() #calls the start function
