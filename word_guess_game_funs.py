@@ -1,6 +1,30 @@
 #this is not the main game code i just use it to mess around and try new things...
 import random
 import os
+RESET = '\033[0m'  # Reset to default
+BOLD = '\033[1m'   # Bold
+UNDERLINE = '\033[4m'  # Underline
+
+# Foreground colors
+RED = '\033[31m'
+GREEN = '\033[32m'
+YELLOW = '\033[33m'
+BLUE = '\033[34m'
+PURPLE = '\033[35m'
+CYAN = '\033[36m'
+WHITE = '\033[37m'
+LIME = '\033[92m'
+
+
+# Background colors
+BLACK_BACKGROUND = '\033[40m'
+RED_BACKGROUND = '\033[41m'
+GREEN_BACKGROUND = '\033[42m'
+YELLOW_BACKGROUND = '\033[43m'
+BLUE_BACKGROUND = '\033[44m'
+PURPLE_BACKGROUND = '\033[45m'
+CYAN_BACKGROUND = '\033[46m'
+WHITE_BACKGROUND = '\033[47m'
 
 Words = [
     {
@@ -2446,7 +2470,7 @@ Words = [
 def greet():
     input_check = True #Using this to check for correct input set it to True before using
     
-    print("Guess the word game")
+    print(RED+"Guess"+YELLOW+" the"+ CYAN+" word"+ PURPLE+" game"+RESET)
     print("Enter 1 to start game.")
     print("Enter 2 to exit exit.")
     
@@ -2458,7 +2482,12 @@ def greet():
                 if player_inpt == 1 or player_inpt == 2:
                     #print("The code reached here #1") #for testing
                     input_check = False
-                    start()
+                    if player_inpt == 1:
+                        start()
+                        
+                    elif player_inpt == 2:
+                        print("Exiting...")
+                        
                     break
                 
                 else:
@@ -2468,11 +2497,11 @@ def greet():
         except ValueError:
             print("Please enter 1 or 2.")
     
-    if(player_inpt == 1):
-        start()
+    # if(player_inpt == 1):
+    #     start()
         
-    elif (player_inpt == 2):
-        print("Exiting...")
+    # elif (player_inpt == 2):
+    #     print("Exiting...")
 
 
 #This function is called when the game starts anything that has to do after start goes below
@@ -2483,33 +2512,39 @@ def start():
     chosen_word = Words[random_index].get("name")
     chosen_word_len = len(chosen_word)
     tries = 10
+    empty_str = ["_"] * chosen_word_len
+    fmt_empty_str = ' '.join(empty_str)  
     
     #print(chosen_word_len) #for testing to check the length of the word
     #print(chosen_word)#for testing to see the word
     
     def hint_1():
         next_hint_in = 3
+        nonlocal tries
+        nonlocal fmt_empty_str
         #print("GUESS THE WORD")  #keep these inside the while loop
         # print("Length: "+str(chosen_word_len))
         #print("_ "*chosen_word_len)
-        empty_str = ["_"] * chosen_word_len
-        fmt_empty_str = ' '.join(empty_str)
+        # empty_str = ["_"] * chosen_word_len
+        # fmt_empty_str = ' '.join(empty_str)     #formatted string removes [''] <-- these
         #print("Hint 1: "+str(Words[random_index].get("hint_1")))
         
         while next_hint_in > 0:
-            nonlocal tries
-            print("GUESS THE WORD")
-            print("Length: "+str(chosen_word_len)+"  Tries: "+str(tries))
+
+            print(UNDERLINE+"GUESS THE WORD"+RESET)
+            print("Length: "+CYAN+str(chosen_word_len)+RESET+"  Tries: "+LIME+str(tries)+RESET)
             print(fmt_empty_str)
-            print("Hint 1: "+str(Words[random_index].get("hint_1")))
+            print(BOLD+"Hint 1: "+str(Words[random_index].get("hint_1"))+RESET)
             player_input = input("> ")
             player_input = player_input.lower()
             player_input = player_input.capitalize()
            # player_input_len = len(player_input)
            
-#I wrote this but i'm not even gonna pretend ive a clue what the fuck is going on here.
 
-            if(player_input == chosen_word):
+            if player_input == '':
+                os.system("cls")
+                print(RED + "Answer cannot be empty"+RESET)
+            elif(player_input == chosen_word):
                 win_or_loose = True
                 gameover(win_or_loose,chosen_word)
                 break
@@ -2518,132 +2553,126 @@ def start():
                 #nonlocal tries
                 tries -= 1
                 next_hint_in -=1
-                chance_random_letter = random.randrange(1,2)
+                chance_random_letter = random.randrange(1,101)
                 # This thing gives a random letter randomly so its a coin flip everytime u get the wrong answer
                 # it fills an empty sell (50% chance to do so) 
-                if(chance_random_letter == 3):
+                if(chance_random_letter > 50):
                     random_letter_index = random.randrange(0,chosen_word_len)
                     random_letter = chosen_word[random_letter_index]
                     empty_str[random_letter_index] = random_letter
                     fmt_empty_str = ' '.join(empty_str)
                     os.system("cls")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
                     
                 else:
                     os.system("cls")
-                    print("The word",player_input,"was not the right word!\nTry again.\n")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
                     
         if(next_hint_in == 0):
             hint_2()            
                   
         
     def hint_2():
-        # print("GUESS THE WORD")
-        # print("Length: "+str(chosen_word_len))
-        # print("_ "*chosen_word_len)
-        # print("Hint 1: "+str(Words[random_index].get("hint_1")))
-        # print("Hint 2: "+str(Words[random_index].get("hint_2")))
-        
         next_hint_in = 3
         #print("GUESS THE WORD")  #keep these inside the while loop
         # print("Length: "+str(chosen_word_len))
         #print("_ "*chosen_word_len)
-        empty_str = ["_"] * chosen_word_len
-        fmt_empty_str = ' '.join(empty_str)
-        # print("Hint 1: "+str(Words[random_index].get("hint_1")))
-        # print("Hint 2: "+str(Words[random_index].get("hint_2")))
+        #formatted string removes [''] <-- these
+        #print("Hint 1: "+str(Words[random_index].get("hint_1")))
         
         while next_hint_in > 0:
-            print("GUESS THE WORD")
-            #print("Length: "+str(chosen_word_len))
             nonlocal tries
-            print("Length: "+str(chosen_word_len)+"  Tries: "+str(tries))
+            nonlocal fmt_empty_str
+            print(UNDERLINE+"GUESS THE WORD"+RESET)
+            print("Length: "+CYAN+str(chosen_word_len)+RESET+"  Tries: "+LIME+str(tries)+RESET)
             print(fmt_empty_str)
-            print("Hint 1: "+str(Words[random_index].get("hint_1")))
-            print("Hint 2: "+str(Words[random_index].get("hint_2")))
+            print(BOLD+"Hint 1: "+str(Words[random_index].get("hint_1"))+RESET)
+            print(BOLD+"Hint 2: "+str(Words[random_index].get("hint_2"))+RESET)
             player_input = input("> ")
             player_input = player_input.lower()
             player_input = player_input.capitalize()
            # player_input_len = len(player_input)
            
-            if(player_input == chosen_word):
+#I wrote this but i'm not even gonna pretend ive a clue what the fuck is going on here.
+            if player_input == '':
+                os.system("cls")
+                print(RED + "Answer cannot be empty"+RESET)
+            elif(player_input == chosen_word):
                 win_or_loose = True
                 gameover(win_or_loose,chosen_word)
                 break
             
             elif(player_input != chosen_word):
-               # nonlocal tries
+                #nonlocal tries
                 tries -= 1
                 next_hint_in -=1
-                chance_random_letter = random.randrange(1,2)
-                if(chance_random_letter == 2):
+                chance_random_letter = random.randrange(1,101)
+                # This thing gives a random letter randomly so its a coin flip everytime u get the wrong answer
+                # it fills an empty sell (50% chance to do so) 
+                if(chance_random_letter > 50):
                     random_letter_index = random.randrange(0,chosen_word_len)
                     random_letter = chosen_word[random_letter_index]
                     empty_str[random_letter_index] = random_letter
-                    fmt_empty_str = ' '.join(empty_str)
                     os.system("cls")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
+                    fmt_empty_str = ' '.join(empty_str)
+                    
                     
                 else:
                     os.system("cls")
-                    print("The word",player_input,"was not the right word!\nTry again.\n")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
                     
         if(next_hint_in == 0):
             hint_3()            
-
+             
     def hint_3():
-        # print("GUESS THE WORD")
-        # print("Length: "+str(chosen_word_len))
-        # print("_ "*chosen_word_len)
-        # print("Hint 1: "+str(Words[random_index].get("hint_1")))
-        # print("Hint 2: "+str(Words[random_index].get("hint_2")))
-        # print("Hint 3: "+str(Words[random_index].get("hint_3")))
         
-        next_hint_in = 3
-        #print("GUESS THE WORD")  #keep these inside the while loop
-        # print("Length: "+str(chosen_word_len))
-        #print("_ "*chosen_word_len)
-        empty_str = ["_"] * chosen_word_len
-        fmt_empty_str = ' '.join(empty_str)
         nonlocal tries
-        # print("Hint 1: "+str(Words[random_index].get("hint_1")))
-        # print("Hint 2: "+str(Words[random_index].get("hint_2")))
-        # print("Hint 3: "+str(Words[random_index].get("hint_3")))
+        nonlocal fmt_empty_str
         
-        while tries > 0:
-            print("GUESS THE WORD")
-            #print("Length: "+str(chosen_word_len))
-            #nonlocal tries
-            print("Length: "+str(chosen_word_len)+"  Tries: "+str(tries))
+       #formatted string removes [''] <-- these
+        #print("Hint 1: "+str(Words[random_index].get("hint_1")))
+        
+        while tries >  0:
+
+            print(UNDERLINE+"GUESS THE WORD"+RESET)
+            print("Length: "+CYAN+str(chosen_word_len)+RESET+"  Tries: "+LIME+str(tries)+RESET)
             print(fmt_empty_str)
-            fmt_empty_str = ' '.join(empty_str)
-            print("Hint 1: "+str(Words[random_index].get("hint_1")))
-            print("Hint 2: "+str(Words[random_index].get("hint_2")))
-            print("Hint 3: "+str(Words[random_index].get("hint_3")))   
+            print(BOLD+"Hint 1: "+str(Words[random_index].get("hint_1"))+RESET)
+            print(BOLD+"Hint 2: "+str(Words[random_index].get("hint_2"))+RESET)
             player_input = input("> ")
             player_input = player_input.lower()
             player_input = player_input.capitalize()
-           #player_input_len = len(player_input)
+           # player_input_len = len(player_input)
            
-            if(player_input == chosen_word):
+#I wrote this but i'm not even gonna pretend ive a clue what the fuck is going on here.
+            if player_input == '':
+                os.system("cls")
+                print(RED + "Answer cannot be empty"+RESET)
+            elif(player_input == chosen_word):
                 win_or_loose = True
                 gameover(win_or_loose,chosen_word)
                 break
             
             elif(player_input != chosen_word):
-               # nonlocal tries
+                #nonlocal tries
                 tries -= 1
-                # next_hint_in -=1
-                chance_random_letter = random.randrange(1,2)
-                
-                if(chance_random_letter == 3):
+
+                chance_random_letter = random.randrange(1,101)
+                # This thing gives a random letter randomly so its a coin flip everytime u get the wrong answer
+                # it fills an empty sell (50% chance to do so) 
+                if(chance_random_letter > 50):
                     random_letter_index = random.randrange(0,chosen_word_len)
                     random_letter = chosen_word[random_letter_index]
                     empty_str[random_letter_index] = random_letter
-                    fmt_empty_str = ' '.join(empty_str)
                     os.system("cls")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
+                    fmt_empty_str = ' '.join(empty_str)
+                    
                     
                 else:
                     os.system("cls")
-                    print("The word",player_input,"was not the right word!\nTry again.\n")
+                    print(YELLOW+"The word",player_input,"was not the right word!"+RESET+"\nTry again.\n")
                     
         if(tries == 0):
             win_or_loose = False
@@ -2662,7 +2691,7 @@ def start():
 def gameover(win_or_loose,chosen_word): # This takes a boolean true or false to decide whats its gonna show to the player.
     if win_or_loose == True: # True if they won.
         os.system("cls")
-        print("Congrats! You got it right!")
+        print(BOLD+"Congrats! You got it right!")
         print("The word was: ",chosen_word+".")
         print("What would you like to do now\n1. To play again.\n2. To exit.\n")
         while True:
@@ -2673,7 +2702,7 @@ def gameover(win_or_loose,chosen_word): # This takes a boolean true or false to 
             except ValueError:
                 print("Please enter the 1 or 2")
                 
-        choice = 2
+  
         if (choice == 1):
             start()
             
@@ -2692,13 +2721,13 @@ def gameover(win_or_loose,chosen_word): # This takes a boolean true or false to 
             except ValueError:
                 print("Please enter the 1 or 2")
                 
-        choice = 2
         # This choice thing does not work!
         # will fix later.
         if (choice == 1):
             start()
             
         elif (choice == 2):
+            print(choice,"thic code")
             print("Exiting...")
         
     
